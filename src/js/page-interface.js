@@ -1,15 +1,16 @@
 export default class PageInterface {
   renderCards(hits, element) {
-    const markup = hits.map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags: alt,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => `<a class="gallery__item" href="${largeImageURL}">
+    const markup = hits
+      .map(
+        ({
+          webformatURL,
+          largeImageURL,
+          tags: alt,
+          likes,
+          views,
+          comments,
+          downloads,
+        }) => `<a class="gallery__item" href="${largeImageURL}">
     <div class="photo-card">
       <div class="thumb">
         <img src="${webformatURL}" alt="${alt}" loading="lazy" />
@@ -34,9 +35,10 @@ export default class PageInterface {
       </div>
     </div>
   </a>`
-    );
+      )
+      .join('');
 
-    element.insertAdjacentHTML('beforeend', markup.join(''));
+    element.insertAdjacentHTML('beforeend', markup);
   }
 
   reset(element) {

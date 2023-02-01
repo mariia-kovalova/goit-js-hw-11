@@ -25,7 +25,7 @@ let lightbox = new SimpleLightbox('.gallery .gallery__item');
 
 refs.searchForm.addEventListener('submit', onSearchFormSubmit);
 
-function onSearchFormSubmit(e) {
+async function onSearchFormSubmit(e) {
   e.preventDefault();
   pageInterface.reset(refs.gallery);
   pageInterface.hide(refs.end);
@@ -33,8 +33,9 @@ function onSearchFormSubmit(e) {
 
   imagesApiService.query = e.currentTarget.elements.searchQuery.value;
   imagesApiService.resetPageCount();
-  imagesApiService.reseLoadedImagesCount();
-  imagesApiService.fetchImages().then(loadInterface);
+  imagesApiService.resetLoadedImagesCount();
+  const imagesData = await imagesApiService.fetchImages();
+  loadInterface(imagesData);
 }
 
 function loadInterface({ data: { hits, totalHits } }) {
@@ -70,6 +71,16 @@ function loadInterface({ data: { hits, totalHits } }) {
   infinitObserver.observe(lastChild);
 }
 
+async function onObserver([entry], observer) {
+  if (entry.isIntersecting) {
+    observer.unobserve(entry.target);
+
+    pageInterface.show(refs.loader);
+    const imagesData = await imagesApiService.fetchImages();
+    loadInterface(imagesData);
+  }
+}
+
 function smoothScroll(element) {
   const { height: cardHeight } =
     element.firstElementChild.getBoundingClientRect();
@@ -78,13 +89,4 @@ function smoothScroll(element) {
     top: cardHeight * 2,
     behavior: 'smooth',
   });
-}
-
-function onObserver([entry], observer) {
-  if (entry.isIntersecting) {
-    observer.unobserve(entry.target);
-
-    pageInterface.show(refs.loader);
-    imagesApiService.fetchImages().then(loadInterface);
-  }
 }

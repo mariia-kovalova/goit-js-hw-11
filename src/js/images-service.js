@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+axios.defaults.baseURL = 'https://pixabay.com/api';
+
 export default class ImagesApiService {
   constructor() {
     this._query = '';
@@ -9,8 +11,6 @@ export default class ImagesApiService {
   }
 
   async fetchImages() {
-    const URL = `https://pixabay.com/api/?q=${this._query}`;
-
     const options = {
       params: {
         key: '32612520-8855a8bf59320f9a880e30168',
@@ -20,11 +20,12 @@ export default class ImagesApiService {
         pretty: 'true',
         page: this._page,
         per_page: this._per_page,
+        q: this._query,
       },
     };
 
     try {
-      const response = await axios.get(URL, options);
+      const response = await axios.get(`/`, options);
       this.incrementPageCount();
       return response;
     } catch (error) {
@@ -40,7 +41,7 @@ export default class ImagesApiService {
     this._page = 1;
   }
 
-  reseLoadedImagesCount() {
+  resetLoadedImagesCount() {
     this._loadedImages = 0;
   }
 
