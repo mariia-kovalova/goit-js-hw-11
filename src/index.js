@@ -60,7 +60,6 @@ function loadInterface({ data: { hits, totalHits } }) {
   if (numberOfLoadedImages > perPage) {
     smoothScroll(refs.gallery);
   }
-
   if (numberOfLoadedImages >= totalHits) {
     notifyApi.info();
     pageInterface.show(refs.end);
