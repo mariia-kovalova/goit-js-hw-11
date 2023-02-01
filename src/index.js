@@ -45,6 +45,7 @@ function loadInterface({ data: { hits, totalHits } }) {
     notifyApi.failure();
     return;
   }
+
   const perPage = imagesApiService.per_page;
   imagesApiService.loadedImages = numberOfImages;
   const numberOfLoadedImages = imagesApiService.loadedImages;
